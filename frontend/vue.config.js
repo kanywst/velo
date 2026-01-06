@@ -30,7 +30,7 @@ module.exports = {
           maxSize: limit
         }
       });
-      
+
     config.module
       .rule('svg')
       .set('parser', {
