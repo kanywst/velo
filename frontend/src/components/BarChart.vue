@@ -1,13 +1,43 @@
+<template>
+  <Bar :data="chartData" :options="options" />
+</template>
+
 <script>
-import { Bar, mixins } from 'vue-chartjs'
-const { reactiveProp } = mixins
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  TimeScale
+} from 'chart.js'
+import { Bar } from 'vue-chartjs'
+import 'chartjs-adapter-moment'
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  TimeScale
+)
 
 export default {
-  extends: Bar,
-  mixins: [reactiveProp],
-  props: ['options'],
-  mounted () {
-    this.renderChart(this.chartData, this.options)
+  name: 'BarChart',
+  components: { Bar },
+  props: {
+    chartData: {
+      type: Object,
+      required: true
+    },
+    options: {
+      type: Object,
+      default: () => {}
+    }
   }
 }
 </script>

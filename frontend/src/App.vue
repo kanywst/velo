@@ -58,12 +58,12 @@
           </div>
         </div>
         
-        <div slot="footer">
+        <template #footer>
             <div class="stats">
                 <span v-if="lastUpdated">Last updated: {{ lastUpdated }}</span>
                 <span v-else>No measurements yet.</span>
             </div>
-        </div>
+        </template>
       </card>
     </div>
   </div>
@@ -102,44 +102,49 @@ export default {
       chartOptions: {
         responsive: true,
         maintainAspectRatio: false,
-        legend: {
-            display: true,
-            position: 'bottom'
-        },
-        tooltips: {
-            mode: 'index',
-            intersect: false,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'bottom'
+            },
+            tooltip: {
+                mode: 'index',
+                intersect: false,
+            }
         },
         scales: {
-            xAxes: [{
+            x: {
                 type: 'time',
                 time: {
                     displayFormats: {
                         hour: 'MMM D, hA',
                         day: 'MMM D'
-                    }
+                    },
+                    tooltipFormat: 'll HH:mm'
                 },
-                gridLines: {
+                grid: {
                     display: false
+                },
+                title: {
+                    display: true,
+                    text: 'Time'
                 },
                 ticks: {
                     autoSkip: true,
                     maxTicksLimit: 8
                 }
-            }],
-            yAxes: [{
-                scaleLabel: {
+            },
+            y: {
+                title: {
                     display: true,
-                    labelString: 'Mbps'
+                    text: 'Speed (Mbps)'
                 },
-                gridLines: {
+                grid: {
                     borderDash: [2, 4],
                     color: "rgba(0, 0, 0, 0.1)"
                 },
-                ticks: {
-                    beginAtZero: true
-                }
-            }]
+                beginAtZero: true
+            }
         }
       }
     }

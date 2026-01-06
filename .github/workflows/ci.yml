@@ -26,6 +26,11 @@ jobs:
       - name: Install govulncheck
         run: go install golang.org/x/vuln/cmd/govulncheck@latest
 
+      - name: Create dummy frontend assets for embed
+        run: |
+          mkdir -p frontend/dist
+          touch frontend/dist/index.html
+
       - name: Run Linter (go vet)
         run: make lint-backend
 
