@@ -1,0 +1,69 @@
+name: Vulnerability & Lint Check
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  backend-check:
+    name: Backend (Go) Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.25'
+          cache: true
+
+      - name: Install dependencies
+        run: go mod download
+
+      - name: Install govulncheck
+        run: go install golang.org/x/vuln/cmd/govulncheck@latest
+
+      - name: Create dummy frontend assets for embed
+        run: |
+          mkdir -p frontend/dist
+          touch frontend/dist/index.html
+
+      - name: Run Linter (go vet)
+        run: make lint-backend
+
+      - name: Run Vulnerability Check
+        run: |
+          make audit-backend
+          echo "Running govulncheck..."
+          govulncheck ./...
+
+  frontend-check:
+    name: Frontend (Vue) Check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Linter
+        run: npm run lint
+
+      - name: Run Audit
+        # npm audit returns non-zero exit code on vulnerabilities.
+        # Use --audit-level=high or similar if you want to fail only on critical issues.
+        # For now, we allow it to fail the build if any vulnerability is found.
+        run: npm audit

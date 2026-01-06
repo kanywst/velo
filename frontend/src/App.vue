@@ -41,10 +41,12 @@
 
           <div class="control-group" v-if="availableIPs.length > 0">
             <span class="control-label">IP:</span>
-            <select v-model="selectedIP" @change="processHistory(fullHistory)" class="ip-select">
-                <option value="all">All IPs</option>
-                <option v-for="ip in availableIPs" :key="ip" :value="ip">{{ ip }}</option>
-            </select>
+            <velo-dropdown 
+                v-model="selectedIP" 
+                :options="ipOptions" 
+                @change="processHistory(fullHistory)"
+                placeholder="All IPs"
+            />
           </div>
         </div>
 
@@ -58,12 +60,12 @@
           </div>
         </div>
         
-        <div slot="footer">
+        <template #footer>
             <div class="stats">
                 <span v-if="lastUpdated">Last updated: {{ lastUpdated }}</span>
                 <span v-else>No measurements yet.</span>
             </div>
-        </div>
+        </template>
       </card>
     </div>
   </div>
@@ -73,6 +75,7 @@
 import SpeedChart from './components/SpeedChart.vue'
 import BarChart from './components/BarChart.vue'
 import Card from './components/Card.vue'
+import VeloDropdown from './components/VeloDropdown.vue'
 import moment from 'moment'
 
 export default {
@@ -80,7 +83,8 @@ export default {
   components: {
     SpeedChart,
     BarChart,
-    Card
+    Card,
+    VeloDropdown
   },
   data() {
     return {
@@ -102,46 +106,60 @@ export default {
       chartOptions: {
         responsive: true,
         maintainAspectRatio: false,
-        legend: {
-            display: true,
-            position: 'bottom'
-        },
-        tooltips: {
-            mode: 'index',
-            intersect: false,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'bottom'
+            },
+            tooltip: {
+                mode: 'index',
+                intersect: false,
+            }
         },
         scales: {
-            xAxes: [{
+            x: {
                 type: 'time',
                 time: {
                     displayFormats: {
                         hour: 'MMM D, hA',
                         day: 'MMM D'
-                    }
+                    },
+                    tooltipFormat: 'll HH:mm'
                 },
-                gridLines: {
+                grid: {
                     display: false
+                },
+                title: {
+                    display: true,
+                    text: 'Time'
                 },
                 ticks: {
                     autoSkip: true,
                     maxTicksLimit: 8
                 }
-            }],
-            yAxes: [{
-                scaleLabel: {
+            },
+            y: {
+                title: {
                     display: true,
-                    labelString: 'Mbps'
+                    text: 'Speed (Mbps)'
                 },
-                gridLines: {
+                grid: {
                     borderDash: [2, 4],
                     color: "rgba(0, 0, 0, 0.1)"
                 },
-                ticks: {
-                    beginAtZero: true
-                }
-            }]
+                beginAtZero: true
+            }
         }
       }
+    }
+  },
+  computed: {
+    ipOptions() {
+        const opts = [{ label: 'All IPs', value: 'all' }];
+        this.availableIPs.forEach(ip => {
+            opts.push({ label: ip, value: ip });
+        });
+        return opts;
     }
   },
   mounted() {

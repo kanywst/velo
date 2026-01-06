@@ -18,7 +18,7 @@
 
 <script>
 export default {
-  name: "card",
+  name: "VeloCard",
   props: {
     title: String,
     subTitle: String
