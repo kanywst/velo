@@ -3,6 +3,8 @@
 Velo is a network speed measurement tool.
 It allows you to monitor your internet connection speed (Download, Upload, Latency) automatically over time and visualize the results in a graph.
 
+![Velo Dashboard Example](assets/example.png)
+
 ## Features
 
 - **Speed Test**: Measures download speed, upload speed, and latency using `speedtest-go`.
