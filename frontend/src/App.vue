@@ -332,9 +332,9 @@ export default {
   methods: {
     initWails() {
         this.fetchHistory()
-        
+
         if (window.runtime) {
-            window.runtime.EventsOn("measurement_complete", (result) => {
+            window.runtime.EventsOn("measurement_complete", (_result) => {
                 this.loading = false
                 this.fetchHistory()
                 this.$refs.toast.add('Speed test completed');
@@ -349,7 +349,7 @@ export default {
       this.loading = true
       if (window.go && window.go.backend && window.go.backend.VeloApp) {
           window.go.backend.VeloApp.RunMeasurement()
-            .then(result => {
+            .then(_result => {
                 // Event listener will handle update
             })
             .catch(err => {
@@ -358,8 +358,8 @@ export default {
             })
       } else {
           // Simulate for dev without backend
-          setTimeout(() => { 
-              this.loading = false; 
+          setTimeout(() => {
+              this.loading = false;
               this.fetchHistory();
           }, 2000);
       }
