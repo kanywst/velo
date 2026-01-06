@@ -136,3 +136,25 @@ func (a *VeloApp) GetHistory(scope string) []models.MeasurementDTO {
 	}
 	return dtos
 }
+
+func (a *VeloApp) DeleteMeasurement(id uint) bool {
+	if a.DB == nil {
+		return false
+	}
+	if err := a.DB.Unscoped().Where("id = ?", id).Delete(&models.Measurement{}).Error; err != nil {
+		runtime.LogErrorf(a.ctx, "Failed to delete measurement: %v", err)
+		return false
+	}
+	return true
+}
+
+func (a *VeloApp) ClearHistory() bool {
+	if a.DB == nil {
+		return false
+	}
+	if err := a.DB.Unscoped().Where("1 = 1").Delete(&models.Measurement{}).Error; err != nil {
+		runtime.LogErrorf(a.ctx, "Failed to clear history: %v", err)
+		return false
+	}
+	return true
+}

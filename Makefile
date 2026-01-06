@@ -1,5 +1,10 @@
 .PHONY: lint lint-backend lint-frontend audit audit-backend audit-frontend check-all
 
+# Build the application
+build:
+	@echo "==> Building Velo for macOS..."
+	wails build -platform darwin/universal -clean
+
 # Run all checks
 check-all: lint audit
 
