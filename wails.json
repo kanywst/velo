@@ -11,6 +11,12 @@
     "email": "user@example.com"
   },
   "version": "2",
+  "info": {
+    "productName": "Velo",
+    "productVersion": "0.2.0",
+    "copyright": "Copyright © 2026",
+    "comments": "Velo Internet Speed Test"
+  },
   "wailsjsdir": "./frontend/src/wailsjs",
   "assetdir": "./frontend/dist"
 }
