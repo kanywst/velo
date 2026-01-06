@@ -41,10 +41,12 @@
 
           <div class="control-group" v-if="availableIPs.length > 0">
             <span class="control-label">IP:</span>
-            <select v-model="selectedIP" @change="processHistory(fullHistory)" class="ip-select">
-                <option value="all">All IPs</option>
-                <option v-for="ip in availableIPs" :key="ip" :value="ip">{{ ip }}</option>
-            </select>
+            <velo-dropdown 
+                v-model="selectedIP" 
+                :options="ipOptions" 
+                @change="processHistory(fullHistory)"
+                placeholder="All IPs"
+            />
           </div>
         </div>
 
@@ -73,6 +75,7 @@
 import SpeedChart from './components/SpeedChart.vue'
 import BarChart from './components/BarChart.vue'
 import Card from './components/Card.vue'
+import VeloDropdown from './components/VeloDropdown.vue'
 import moment from 'moment'
 
 export default {
@@ -80,7 +83,8 @@ export default {
   components: {
     SpeedChart,
     BarChart,
-    Card
+    Card,
+    VeloDropdown
   },
   data() {
     return {
@@ -147,6 +151,15 @@ export default {
             }
         }
       }
+    }
+  },
+  computed: {
+    ipOptions() {
+        const opts = [{ label: 'All IPs', value: 'all' }];
+        this.availableIPs.forEach(ip => {
+            opts.push({ label: ip, value: ip });
+        });
+        return opts;
     }
   },
   mounted() {
