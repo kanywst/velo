@@ -434,7 +434,7 @@ export default {
             return;
         }
 
-        history.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+        history = [...history].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
 
         const lastItem = history.slice(-1)[0];
         this.lastUpdated = moment(lastItem.timestamp).fromNow();

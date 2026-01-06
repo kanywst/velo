@@ -152,7 +152,7 @@ func (a *VeloApp) ClearHistory() bool {
 	if a.DB == nil {
 		return false
 	}
-	if err := a.DB.Exec("DELETE FROM measurements").Error; err != nil {
+	if err := a.DB.Unscoped().Where("1 = 1").Delete(&models.Measurement{}).Error; err != nil {
 		runtime.LogErrorf(a.ctx, "Failed to clear history: %v", err)
 		return false
 	}
