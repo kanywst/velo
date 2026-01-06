@@ -21,8 +21,14 @@ audit-backend:
 	@echo "==> Auditing Backend (Go)..."
 	@echo "Running go mod verify..."
 	go mod verify
-	@echo "Note: For deeper security analysis, consider installing govulncheck: go install golang.org/x/vuln/cmd/govulncheck@latest"
+	@if command -v govulncheck >/dev/null 2>&1; then \
+		echo "Running govulncheck..."; \
+		govulncheck ./...; \
+	else \
+		echo "govulncheck not found. Skipping vulnerability scan."; \
+		echo "Install with: go install golang.org/x/vuln/cmd/govulncheck@latest"; \
+	fi
 
 audit-frontend:
 	@echo "==> Auditing Frontend (Node)..."
-	cd frontend && npm audit
+	cd frontend && npm audit --audit-level=high
