@@ -91,13 +91,13 @@ export default {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  padding: 8px 16px;
-  font-size: 0.95rem;
+  padding: 6px 12px;
+  font-size: 0.85rem;
   font-weight: 500;
-  color: #555;
+  color: #495057;
   background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
   outline: none;
@@ -105,21 +105,21 @@ export default {
 
 .dropdown-toggle:hover {
   background-color: #f8f9fa;
-  border-color: #ccc;
+  border-color: #ced4da;
 }
 
 .dropdown-toggle.has-value {
-  color: #333;
-  border-color: #bbb;
+  color: #212529;
+  border-color: #adb5bd;
 }
 
 .arrow-down {
-  border: solid #888;
-  border-width: 0 2px 2px 0;
+  border: solid #adb5bd;
+  border-width: 0 1.5px 1.5px 0;
   display: inline-block;
-  padding: 3px;
+  padding: 2.5px;
   transform: rotate(45deg);
-  margin-left: 10px;
+  margin-left: 8px;
   margin-bottom: 2px;
   transition: transform 0.2s ease;
 }
@@ -136,21 +136,21 @@ export default {
   z-index: 1000;
   display: none;
   min-width: 100%;
-  padding: 5px 0;
+  padding: 4px;
   margin-top: 4px;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   color: #212529;
   text-align: left;
   list-style: none;
   background-color: #fff;
   background-clip: padding-box;
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  border-radius: 4px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.08);
   max-height: 300px;
   overflow-y: auto;
   opacity: 0;
-  transform: translateY(-10px);
+  transform: translateY(-8px);
   transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
@@ -163,27 +163,33 @@ export default {
 .dropdown-item {
   display: block;
   width: 100%;
-  padding: 8px 16px;
+  padding: 8px 12px;
   clear: both;
   font-weight: 400;
-  color: #212529;
+  color: #495057;
   text-align: inherit;
   white-space: nowrap;
   background-color: transparent;
+  border-radius: 4px;
   border: 0;
   text-decoration: none;
-  transition: background-color 0.15s ease;
+  transition: all 0.15s ease;
+  margin-bottom: 2px;
+}
+
+.dropdown-item:last-child {
+  margin-bottom: 0;
 }
 
 .dropdown-item:hover, .dropdown-item:focus {
-  color: #16181b;
+  color: #212529;
   text-decoration: none;
-  background-color: #f8f9fa;
+  background-color: #f1f3f5;
 }
 
 .dropdown-item.active {
   color: #fff;
   text-decoration: none;
-  background-color: #41B883; /* Vue Green */
+  background-color: #5c7cfa; /* Indigo */
 }
 </style>

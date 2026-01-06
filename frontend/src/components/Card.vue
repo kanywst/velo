@@ -28,55 +28,59 @@ export default {
 
 <style scoped>
 .card {
-  border-radius: 6px;
-  box-shadow: 0 2px 2px rgba(204, 197, 185, 0.5);
+  border-radius: 8px;
   background-color: #FFFFFF;
-  color: #252422;
-  margin-bottom: 20px;
+  color: #2c3e50;
+  margin-bottom: 24px;
   position: relative;
-  border: 1px solid rgba(0,0,0,.125);
+  border: 1px solid #e9ecef;
   display: flex;
   flex-direction: column;
   word-wrap: break-word;
+  transition: border-color 0.2s ease;
+}
+
+.card:hover {
+  border-color: #dee2e6;
 }
 
 .card-header {
   background-color: transparent;
-  border-bottom: 1px solid rgba(0,0,0,.125);
-  padding: 15px 15px 0;
+  padding: 20px 24px 0;
 }
 
 .card-title {
   margin: 0;
-  color: #252422;
-  font-weight: 300;
-  font-size: 1.5rem;
+  color: #1a1b1e;
+  font-weight: 600;
+  font-size: 1.1rem;
 }
 
 .card-category {
-  color: #9A9A9A;
-  font-size: 14px;
-  margin-top: 5px;
-  margin-bottom: 10px;
+  color: #909296;
+  font-size: 13px;
+  margin-top: 4px;
+  margin-bottom: 12px;
 }
 
 .card-body {
-  padding: 15px 15px 10px 15px;
+  padding: 12px 24px 24px 24px;
   flex: 1 1 auto;
 }
 
 .card-footer {
-  padding: 0 15px 10px 15px;
+  padding: 0 24px 16px 24px;
   background-color: transparent;
   line-height: 30px;
   border-top: none !important;
-  font-size: 14px;
+  font-size: 13px;
+  color: #adb5bd;
 }
 
 hr {
-  margin-top: 5px;
-  margin-bottom: 5px;
+  margin-top: 0;
+  margin-bottom: 12px;
   border: 0;
-  border-top: 1px solid rgba(0,0,0,.1);
+  border-top: 1px solid #f1f3f5;
 }
 </style>
