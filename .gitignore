@@ -1,0 +1,36 @@
+# System
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Go
+/bin/
+/dist/
+*.exe
+*.test
+*.out
+go.work
+go.work.sum
+
+# Node / Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/.env.local
+
+# Wails
+build/bin/
+
+# Database
+*.db
+*.db-shm
+*.db-wal
+velo_data.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
