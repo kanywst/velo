@@ -4,11 +4,12 @@ import (
 	"context"
 	"time"
 
+	"velo/backend/models"
+
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/showwin/speedtest-go/speedtest"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
-	"velo/backend/models"
 )
 
 type VeloApp struct {
@@ -66,7 +67,20 @@ func (a *VeloApp) RunMeasurement() *models.MeasurementDTO {
 
 	// Basic Speedtest Logic
 	var speedTestClient = speedtest.New()
-	serverList, _ := speedTestClient.FetchServers()
+	
+	// Fetch User Info to get IP
+	user, err := speedTestClient.FetchUserInfo()
+	ipAddr := "Unknown"
+	if err == nil {
+		ipAddr = user.IP
+	}
+
+	serverList, err := speedTestClient.FetchServers()
+	if err != nil {
+		runtime.LogError(a.ctx, "Failed to fetch servers: "+err.Error())
+		return nil
+	}
+
 	targets, _ := serverList.FindServer([]int{})
 
 	if len(targets) == 0 {
@@ -84,6 +98,7 @@ func (a *VeloApp) RunMeasurement() *models.MeasurementDTO {
 		DownloadSpeed: float64(s.DLSpeed) * 8 / 1000000, // bps to Mbps
 		UploadSpeed:   float64(s.ULSpeed) * 8 / 1000000,   // bps to Mbps
 		Latency:       float64(s.Latency.Milliseconds()),
+		IPAddress:     ipAddr,
 	}
 
 	a.DB.Create(m)
@@ -95,12 +110,26 @@ func (a *VeloApp) RunMeasurement() *models.MeasurementDTO {
 	return &dto
 }
 
-func (a *VeloApp) GetHistory() []models.MeasurementDTO {
+func (a *VeloApp) GetHistory(scope string) []models.MeasurementDTO {
 	var history []models.Measurement
 	var dtos []models.MeasurementDTO
 
 	if a.DB != nil {
-		a.DB.Order("timestamp asc").Find(&history)
+		query := a.DB.Order("timestamp asc")
+
+		now := time.Now()
+		switch scope {
+		case "1h":
+			query = query.Where("timestamp > ?", now.Add(-1*time.Hour))
+		case "24h":
+			query = query.Where("timestamp > ?", now.Add(-24*time.Hour))
+		case "7d":
+			query = query.Where("timestamp > ?", now.Add(-7*24*time.Hour))
+		case "30d":
+			query = query.Where("timestamp > ?", now.Add(-30*24*time.Hour))
+		}
+
+		query.Find(&history)
 		for _, m := range history {
 			dtos = append(dtos, m.ToDTO())
 		}

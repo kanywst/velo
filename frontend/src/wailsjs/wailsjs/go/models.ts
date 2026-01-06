@@ -6,6 +6,7 @@ export namespace models {
 	    download_speed: number;
 	    upload_speed: number;
 	    latency: number;
+	    ip_address: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new MeasurementDTO(source);
@@ -18,6 +19,7 @@ export namespace models {
 	        this.download_speed = source["download_speed"];
 	        this.upload_speed = source["upload_speed"];
 	        this.latency = source["latency"];
+	        this.ip_address = source["ip_address"];
 	    }
 	}
 
