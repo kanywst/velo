@@ -175,6 +175,29 @@
         </div>
       </div>
     </main>
+
+    <!-- UI Components -->
+    <velo-modal 
+      :show="showDeleteModal" 
+      title="Delete Result"
+      message="Are you sure you want to delete this test result? This action cannot be undone."
+      confirm-text="Delete"
+      type="danger"
+      @close="showDeleteModal = false"
+      @confirm="executeDelete"
+    />
+
+    <velo-modal 
+      :show="showClearModal" 
+      title="Clear Database"
+      message="WARNING: This will delete ALL test history permanently. This action is irreversible. Are you sure?"
+      confirm-text="Clear All"
+      type="danger"
+      @close="showClearModal = false"
+      @confirm="executeClearHistory"
+    />
+
+    <velo-toast ref="toast" />
   </div>
 </template>
 
@@ -183,6 +206,8 @@ import SpeedChart from './components/SpeedChart.vue'
 import BarChart from './components/BarChart.vue'
 import Card from './components/Card.vue'
 import VeloDropdown from './components/VeloDropdown.vue'
+import VeloModal from './components/VeloModal.vue'
+import VeloToast from './components/VeloToast.vue'
 import moment from 'moment'
 
 export default {
@@ -191,7 +216,9 @@ export default {
     SpeedChart,
     BarChart,
     Card,
-    VeloDropdown
+    VeloDropdown,
+    VeloModal,
+    VeloToast
   },
   data() {
     return {
@@ -204,6 +231,10 @@ export default {
       selectedIP: 'all',
       availableIPs: [],
       lastUpdated: null,
+      // Modal state
+      showDeleteModal: false,
+      showClearModal: false,
+      itemToDelete: null,
       scopes: [
           { label: '1H', value: '1h' },
           { label: '24H', value: '24h' },
@@ -306,6 +337,7 @@ export default {
             window.runtime.EventsOn("measurement_complete", (result) => {
                 this.loading = false
                 this.fetchHistory()
+                this.$refs.toast.add('Speed test completed');
             })
         }
     },
@@ -344,24 +376,37 @@ export default {
       }
     },
     deleteItem(id) {
-      if (confirm('Are you sure you want to delete this test result?')) {
-        if (window.go && window.go.backend && window.go.backend.VeloApp) {
-          window.go.backend.VeloApp.DeleteMeasurement(id).then(success => {
-            if (success) this.fetchHistory();
-          });
-        }
+      this.itemToDelete = id;
+      this.showDeleteModal = true;
+    },
+    executeDelete() {
+      if (this.itemToDelete && window.go && window.go.backend && window.go.backend.VeloApp) {
+        window.go.backend.VeloApp.DeleteMeasurement(this.itemToDelete).then(success => {
+          this.showDeleteModal = false;
+          this.itemToDelete = null;
+          if (success) {
+            this.fetchHistory();
+            this.$refs.toast.add('Measurement deleted successfully');
+          } else {
+            this.$refs.toast.add('Failed to delete measurement', 'error');
+          }
+        });
       }
     },
     confirmClearHistory() {
-      if (confirm('WARNING: This will delete ALL test history permanently. Are you sure?')) {
-        if (window.go && window.go.backend && window.go.backend.VeloApp) {
-          window.go.backend.VeloApp.ClearHistory().then(success => {
-            if (success) {
-              alert('History cleared successfully.');
-              this.fetchHistory();
-            }
-          });
-        }
+      this.showClearModal = true;
+    },
+    executeClearHistory() {
+      if (window.go && window.go.backend && window.go.backend.VeloApp) {
+        window.go.backend.VeloApp.ClearHistory().then(success => {
+          this.showClearModal = false;
+          if (success) {
+            this.fetchHistory();
+            this.$refs.toast.add('All history cleared successfully');
+          } else {
+            this.$refs.toast.add('Failed to clear history', 'error');
+          }
+        });
       }
     },
     formatFullDate(ts) {
